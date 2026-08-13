@@ -24,6 +24,9 @@ public class SecurityConfig {
                 }
 
         );
+        httpSecurity.csrf(csrf ->
+                csrf.ignoringRequestMatchers("/users/register")
+        );
         httpSecurity.httpBasic(Customizer.withDefaults());
         return httpSecurity.build();
 
