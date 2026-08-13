@@ -15,11 +15,11 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User createUser(User user) {
-        String pswUser = user.getPassword();
-        String pswHash = passwordEncoder.encode(pswUser);
-        user.setPassword(pswHash);
+    public void createUser(User user) {
+        String rawPassword = user.getPassword();
+        String encodedPassword = passwordEncoder.encode(rawPassword);
+        user.setPassword(encodedPassword);
 
-        return  userRepository.save(user);
+        userRepository.save(user);
     }
 }
