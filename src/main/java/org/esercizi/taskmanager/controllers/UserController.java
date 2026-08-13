@@ -21,7 +21,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponse> postRegister(
+    public ResponseEntity<UserResponse> register(
             @Valid @RequestBody UserRegistrationRequest request
             ) {
       UserResponse userResponse =  userService.createUser(request);
