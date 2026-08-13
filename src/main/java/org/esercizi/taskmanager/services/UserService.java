@@ -17,10 +17,12 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public UserResponse createUser(UserRegistrationRequest user) {
-        User userEntity = new User(null, user.username(), null, "USER");
-        String rawPassword = user.password();
+    public UserResponse createUser(UserRegistrationRequest request) {
+
+        String rawPassword = request.password();
         String encodedPassword = passwordEncoder.encode(rawPassword);
+
+        User userEntity = new User(null, request.username(), null, "USER");
         userEntity.setPassword(encodedPassword);
 
         User userSaved = userRepository.save(userEntity);
