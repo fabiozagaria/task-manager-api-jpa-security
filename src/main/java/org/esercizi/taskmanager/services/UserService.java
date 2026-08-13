@@ -18,8 +18,8 @@ public class UserService {
     }
 
     public UserResponse createUser(UserRegistrationRequest user) {
-        User userEntity = new User(null, user.username(), user.password(), "USER");
-        String rawPassword = userEntity.getPassword();
+        User userEntity = new User(null, user.username(), null, "USER");
+        String rawPassword = user.password();
         String encodedPassword = passwordEncoder.encode(rawPassword);
         userEntity.setPassword(encodedPassword);
 
