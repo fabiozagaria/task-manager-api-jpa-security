@@ -1,5 +1,7 @@
 package org.esercizi.taskmanager.services;
 
+import org.esercizi.taskmanager.dto.UserRegistrationRequest;
+import org.esercizi.taskmanager.dto.UserResponse;
 import org.esercizi.taskmanager.models.User;
 import org.esercizi.taskmanager.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,11 +17,14 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public void createUser(User user) {
-        String rawPassword = user.getPassword();
+    public UserResponse createUser(UserRegistrationRequest user) {
+        User userEntity = new User(null, user.username(), user.password(), "USER");
+        String rawPassword = userEntity.getPassword();
         String encodedPassword = passwordEncoder.encode(rawPassword);
-        user.setPassword(encodedPassword);
+        userEntity.setPassword(encodedPassword);
 
-        userRepository.save(user);
+        User userSaved = userRepository.save(userEntity);
+
+        return new UserResponse(userSaved.getId(), userSaved.getUsername(), userSaved.getRole());
     }
 }
