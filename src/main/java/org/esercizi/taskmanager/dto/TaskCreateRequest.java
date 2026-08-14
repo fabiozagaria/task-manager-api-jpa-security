@@ -1,17 +1,13 @@
 package org.esercizi.taskmanager.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
+import org.antlr.v4.runtime.misc.NotNull;
 import org.esercizi.taskmanager.models.User;
 
 public record TaskCreateRequest(
         @NotBlank
         String title,
-
-        boolean completed,
-
-        @NotNull
-        User owner
+        String description
 ) {
 
 }
