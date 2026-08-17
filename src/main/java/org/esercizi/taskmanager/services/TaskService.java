@@ -32,7 +32,7 @@ public class TaskService {
 
     public Task createTask(Task task, String username) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Username not found");
+                .orElseThrow(() -> new UsernameNotFoundException("Username not found"));
         task.setOwner(user);
         return taskRepository.save(task);
     }
