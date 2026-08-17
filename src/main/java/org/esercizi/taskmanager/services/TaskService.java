@@ -5,6 +5,7 @@ import org.esercizi.taskmanager.models.Task;
 import org.esercizi.taskmanager.models.User;
 import org.esercizi.taskmanager.repository.TaskRepository;
 import org.esercizi.taskmanager.repository.UserRepository;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,13 +26,13 @@ public class TaskService {
 
     public Task findByIdAndUsername(Long id, String username) {
       return taskRepository.findByIdAndOwnerUsername(id, username)
-              .orElseThrow();
+              .orElseThrow(()-> new TaskNotFoundException("Task not found"));
 
     }
 
     public Task createTask(Task task, String username) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new TaskNotFoundException("Task not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("Username not found");
         task.setOwner(user);
         return taskRepository.save(task);
     }
