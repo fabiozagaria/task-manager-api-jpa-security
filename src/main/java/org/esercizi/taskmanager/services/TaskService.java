@@ -1,5 +1,6 @@
 package org.esercizi.taskmanager.services;
 
+import org.esercizi.taskmanager.exceptions.TaskNotFoundException;
 import org.esercizi.taskmanager.models.Task;
 import org.esercizi.taskmanager.models.User;
 import org.esercizi.taskmanager.repository.TaskRepository;
@@ -30,7 +31,7 @@ public class TaskService {
 
     public Task createTask(Task task, String username) {
         User user = userRepository.findByUsername(username)
-                .orElseThrow();
+                .orElseThrow(() -> new TaskNotFoundException("Task not found"));
         task.setOwner(user);
         return taskRepository.save(task);
     }

@@ -1,5 +1,6 @@
 package org.esercizi.taskmanager.security;
 
+import jakarta.servlet.DispatcherType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -20,6 +21,7 @@ public class SecurityConfig {
                 authorize -> {
                     authorize.requestMatchers(HttpMethod.POST,"/users/register")
                             .permitAll();
+                    authorize.dispatcherTypeMatchers(DispatcherType.ERROR).permitAll();
                     authorize.anyRequest().authenticated();
                 }
 

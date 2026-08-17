@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("tasks")
+@RequestMapping("/tasks")
 public class TaskController {
 
     private final TaskService taskService;
@@ -33,6 +33,16 @@ public class TaskController {
                 .map(
                         task -> new TaskResponse(task.getId(), task.getTitle(), task.getDescription(), task.isCompleted())
                 ).toList();
+    }
+
+    @GetMapping("/{id}")
+    public TaskResponse find(
+            @PathVariable long id,
+            Authentication authentication
+    ) {
+        String username = authentication.getName();
+        Task task = taskService.findByIdAndUsername(id, username);
+        return new TaskResponse(task.getId(), task.getTitle(), task.getDescription(), task.isCompleted());
     }
 
     @PostMapping
