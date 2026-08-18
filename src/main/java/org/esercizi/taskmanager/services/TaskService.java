@@ -63,7 +63,7 @@ public class TaskService {
                     if (title.isBlank()) {
                         throw new IllegalArgumentException("Titolo vuoto");
                     }
-                String titleClean = title.toLowerCase().trim();
+                String titleClean = title.trim();
                 task.setTitle(titleClean);
             }
 
@@ -71,7 +71,7 @@ public class TaskService {
                 if (description.isBlank()) {
                     throw new IllegalArgumentException("Descrizione vuota");
                 }
-                String descriptionClean = description.toLowerCase().trim();
+                String descriptionClean = description.trim();
                 task.setDescription(descriptionClean);
             }
 
