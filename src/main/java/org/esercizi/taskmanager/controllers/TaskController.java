@@ -61,15 +61,11 @@ public class TaskController {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new TaskResponse(
-                        createdTask.getId(),
-                        createdTask.getTitle(),
-                        createdTask.getDescription(),
-                        createdTask.isCompleted()));
+                .body(taskService.toTaskReponse(createdTask));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Task> put(
+    public ResponseEntity<TaskResponse> put(
           @PathVariable long id,
           Authentication authentication,
           @Valid @RequestBody Task taskUpdated
@@ -78,11 +74,11 @@ public class TaskController {
 
         Task newTask = taskService.updateTask(id, taskUpdated ,username);
         return ResponseEntity
-                .ok(newTask);
+                .ok(taskService.toTaskReponse(newTask));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Task> patch(
+    public ResponseEntity<TaskResponse> patch(
             @PathVariable long id,
             Authentication authentication,
             @RequestBody TaskPatchRequest taskPatchRequest
@@ -90,7 +86,7 @@ public class TaskController {
         String username = authentication.getName();
         Task taskUpdated = taskService.patchTask(id, taskPatchRequest, username);
         return ResponseEntity
-                .ok(taskUpdated);
+                .ok(taskService.toTaskReponse(taskUpdated));
     }
 
     @DeleteMapping("/{id}")

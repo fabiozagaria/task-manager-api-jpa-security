@@ -1,6 +1,7 @@
 package org.esercizi.taskmanager.services;
 
 import org.esercizi.taskmanager.dto.TaskPatchRequest;
+import org.esercizi.taskmanager.dto.TaskResponse;
 import org.esercizi.taskmanager.exceptions.TaskNotFoundException;
 import org.esercizi.taskmanager.models.Task;
 import org.esercizi.taskmanager.models.User;
@@ -87,6 +88,15 @@ public class TaskService {
             Task task = taskRepository.findByIdAndOwnerUsername(id, username)
                     .orElseThrow(() -> new TaskNotFoundException("Task not found"));
             taskRepository.delete(task);
+        }
+
+        public TaskResponse toTaskReponse(Task task) {
+            return new TaskResponse(
+                    task.getId(),
+                    task.getTitle(),
+                    task.getDescription(),
+                    task.isCompleted()
+            );
         }
 
 
