@@ -39,7 +39,7 @@ public class TaskService {
 
     public Task updateTask(Long id, Task updatedTask, String username) {
         Task task = taskRepository.findByIdAndOwnerUsername(id, username)
-                .orElseThrow();
+                .orElseThrow( () -> new TaskNotFoundException("Task not found"));
         task.setTitle(updatedTask.getTitle());
         task.setCompleted(updatedTask.isCompleted());
         task.setDescription(updatedTask.getDescription());

@@ -66,4 +66,15 @@ public class TaskController {
                         createdTask.getDescription(),
                         createdTask.isCompleted()));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(
+            @PathVariable long id,
+            Authentication authentication
+    ) {
+        String username = authentication.getName();
+        taskService.deleteTask(id, username);
+        return ResponseEntity
+                .ok("Done");
+    }
 }
