@@ -49,8 +49,10 @@ public class TaskService {
 
     public void deleteTask(Long id, String username) {
         Task task = taskRepository.findByIdAndOwnerUsername(id, username)
-                .orElseThrow();
+                .orElseThrow( () -> new TaskNotFoundException("Task not found"));
         taskRepository.delete(task);
     }
+
+
 
 }
