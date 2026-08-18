@@ -17,4 +17,13 @@ public class GlobalExceptionHandler {
                 .status(status)
                 .body(exception.getMessage());
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<String> handleIllegalArgument(
+            IllegalArgumentException exception
+    ) {
+
+        return ResponseEntity
+                .badRequest().body(exception.getMessage());
+    }
 }

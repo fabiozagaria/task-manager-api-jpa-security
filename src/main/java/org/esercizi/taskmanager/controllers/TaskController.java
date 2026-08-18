@@ -67,6 +67,26 @@ public class TaskController {
                         createdTask.isCompleted()));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Task> put(
+          @PathVariable long id,
+          Authentication authentication,
+          @Valid @RequestBody Task taskUpdated
+    ) {
+        String username = authentication.getName();
+
+        Task newTask = taskService.updateTask(id, taskUpdated ,username);
+        return ResponseEntity
+                .ok(newTask);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Task> patch(
+            @PathVariable long id,
+            Authentication authentication,
+            @
+    )
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
             @PathVariable long id,

@@ -1,5 +1,6 @@
 package org.esercizi.taskmanager.services;
 
+import org.esercizi.taskmanager.dto.TaskPatchRequest;
 import org.esercizi.taskmanager.exceptions.TaskNotFoundException;
 import org.esercizi.taskmanager.models.Task;
 import org.esercizi.taskmanager.models.User;
@@ -7,6 +8,7 @@ import org.esercizi.taskmanager.repository.TaskRepository;
 import org.esercizi.taskmanager.repository.UserRepository;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.method.MethodValidationException;
 
 import java.util.List;
 
@@ -25,8 +27,8 @@ public class TaskService {
     }
 
     public Task findByIdAndUsername(Long id, String username) {
-      return taskRepository.findByIdAndOwnerUsername(id, username)
-              .orElseThrow(()-> new TaskNotFoundException("Task not found"));
+        return taskRepository.findByIdAndOwnerUsername(id, username)
+                .orElseThrow(() -> new TaskNotFoundException("Task not found"));
 
     }
 
@@ -39,7 +41,7 @@ public class TaskService {
 
     public Task updateTask(Long id, Task updatedTask, String username) {
         Task task = taskRepository.findByIdAndOwnerUsername(id, username)
-                .orElseThrow( () -> new TaskNotFoundException("Task not found"));
+                .orElseThrow(() -> new TaskNotFoundException("Task not found"));
         task.setTitle(updatedTask.getTitle());
         task.setCompleted(updatedTask.isCompleted());
         task.setDescription(updatedTask.getDescription());
@@ -47,12 +49,46 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
-    public void deleteTask(Long id, String username) {
+    public Task patchTask(Long id, TaskPatchRequest taskPatchRequest, String username) {
+
+        String title = taskPatchRequest.title();
+        String description = taskPatchRequest.description();
+        Boolean completed = taskPatchRequest.completed();
+
+
         Task task = taskRepository.findByIdAndOwnerUsername(id, username)
-                .orElseThrow( () -> new TaskNotFoundException("Task not found"));
-        taskRepository.delete(task);
+                .orElseThrow(() -> new TaskNotFoundException("Task not found"));
+            if (title != null) {
+                    if (title.isBlank()) {
+                        throw new IllegalArgumentException("Titolo vuoto");
+                    }
+                String titleClean = title.toLowerCase().trim();
+                task.setTitle(titleClean);
+            }
+
+            if (description != null) {
+                if (description.isBlank()) {
+                    throw new IllegalArgumentException("Descrizione vuota");
+                }
+                String descriptionClean = description.toLowerCase().trim();
+                task.setDescription(descriptionClean);
+            }
+
+            if (completed != null) {
+                task.setCompleted(completed);
+
+            }
+
+
+            return task;
+        }
+
+        public void deleteTask (Long id, String username){
+            Task task = taskRepository.findByIdAndOwnerUsername(id, username)
+                    .orElseThrow(() -> new TaskNotFoundException("Task not found"));
+            taskRepository.delete(task);
+        }
+
+
     }
 
-
-
-}

@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface TaskRepository extends JpaRepository<Task,Long> {
 
-    public List<Task> findAllByOwnerUsername(String username);
+    List<Task> findAllByOwnerUsername(String username);
 
-    public Optional<Task> findByIdAndOwnerUsername(Long id, String username);
+    Optional<Task> findByIdAndOwnerUsername(Long id, String username);
 }
