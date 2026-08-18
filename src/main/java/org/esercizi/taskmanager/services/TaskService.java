@@ -79,8 +79,8 @@ public class TaskService {
 
             }
 
+            return taskRepository.save(task);
 
-            return task;
         }
 
         public void deleteTask (Long id, String username){
