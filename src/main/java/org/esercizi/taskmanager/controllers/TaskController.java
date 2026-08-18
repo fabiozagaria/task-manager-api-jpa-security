@@ -3,6 +3,7 @@ package org.esercizi.taskmanager.controllers;
 
 import jakarta.validation.Valid;
 import org.esercizi.taskmanager.dto.TaskCreateRequest;
+import org.esercizi.taskmanager.dto.TaskPatchRequest;
 import org.esercizi.taskmanager.dto.TaskResponse;
 import org.esercizi.taskmanager.models.Task;
 import org.esercizi.taskmanager.services.TaskService;
@@ -84,8 +85,13 @@ public class TaskController {
     public ResponseEntity<Task> patch(
             @PathVariable long id,
             Authentication authentication,
-            @
-    )
+            @RequestBody TaskPatchRequest taskPatchRequest
+            ) {
+        String username = authentication.getName();
+        Task taskUpdated = taskService.patchTask(id, taskPatchRequest, username);
+        return ResponseEntity
+                .ok(taskUpdated);
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
