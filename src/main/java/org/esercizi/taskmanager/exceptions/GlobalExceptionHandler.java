@@ -56,8 +56,8 @@ public class GlobalExceptionHandler {
                 .status(status)
                 .body(
                         new APIError(
-                                "TASK_NOT_FOUND",
-                                exception.getMessage(),
+                                "USER_CONFLICT",
+                                "Username already exists",
                                 request.getRequestURI(),
                                 status
                                 )
