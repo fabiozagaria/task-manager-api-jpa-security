@@ -1,15 +1,25 @@
 package org.esercizi.taskmanager.security;
 
 import jakarta.servlet.DispatcherType;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.web.SecurityFilterChain;
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
 
 @Configuration
 @EnableWebSecurity
@@ -21,14 +31,21 @@ public class SecurityConfig {
                 authorize -> {
                     authorize.requestMatchers(HttpMethod.POST,"/users/register")
                             .permitAll();
+                    authorize.requestMatchers(HttpMethod.POST, "/auth/login").permitAll();
                     authorize.dispatcherTypeMatchers(DispatcherType.ERROR).permitAll();
                     authorize.anyRequest().authenticated();
                 }
 
         );
         httpSecurity.csrf(csrf ->
-                csrf.ignoringRequestMatchers("/users/register")
+                csrf.ignoringRequestMatchers(
+                        "/users/register",
+                        "/auth/login"
+                        )
+
+
         );
+
         httpSecurity.httpBasic(Customizer.withDefaults());
         return httpSecurity.build();
 
@@ -37,5 +54,30 @@ public class SecurityConfig {
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authenticationConfiguration
+    ) throws Exception {
+       return authenticationConfiguration.getAuthenticationManager();
+
+    }
+
+    @Bean
+    JwtEncoder jwtEncoder(
+            @Value("${security.jwt.secret}") String jwtSecret
+    ) {
+
+        return NimbusJwtEncoder
+                .withSecretKey(getSecretKey(jwtSecret))
+                .build();
+    }
+
+    private SecretKey getSecretKey(String jwtSecret) {
+        byte[] keyBytes = jwtSecret.getBytes(StandardCharsets.UTF_8);
+        return new SecretKeySpec(
+                keyBytes,
+                "HmacSHA256");
     }
 }
