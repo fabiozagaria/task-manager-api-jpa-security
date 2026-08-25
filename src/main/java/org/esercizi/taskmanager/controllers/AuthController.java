@@ -2,6 +2,8 @@ package org.esercizi.taskmanager.controllers;
 
 import jakarta.validation.Valid;
 import org.esercizi.taskmanager.dto.LoginRequest;
+import org.esercizi.taskmanager.dto.LoginResponse;
+import org.esercizi.taskmanager.security.JwtService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -15,13 +17,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
-    public AuthController(AuthenticationManager authenticationManager) {
+    public AuthController(AuthenticationManager authenticationManager, JwtService jwtService) {
         this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
     }
 
     @PostMapping("/login")
-    public void postLogin(
+    public LoginResponse postLogin(
             @Valid @RequestBody LoginRequest request
             )
     {
@@ -31,6 +35,8 @@ public class AuthController {
                         request.password()
                 )
         );
+        String jwt = jwtService.generateToken(authentication);
+        return new LoginResponse(jwt);
     }
 
 }
