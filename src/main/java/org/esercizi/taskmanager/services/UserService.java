@@ -29,4 +29,11 @@ public class UserService {
 
         return new UserResponse(userSaved.getId(), userSaved.getUsername(), userSaved.getRole());
     }
+
+    public User getByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow();
+
+
+    }
 }
