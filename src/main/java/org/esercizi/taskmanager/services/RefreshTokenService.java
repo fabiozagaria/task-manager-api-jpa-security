@@ -69,7 +69,7 @@ public class RefreshTokenService {
         String hashToken = hashToken(rawToken);
 
         RefreshToken refreshToken = refreshTokenRepository.findByTokenHash(hashToken)
-                .orElseThrow();
+                .orElseThrow(() -> new InvalidRefreshTokenException("Token not found"));
         if (refreshToken.getRevokedAt() != null) {
             throw new InvalidRefreshTokenException("Token revocaked at " + refreshToken.getRevokedAt().toString());
         }

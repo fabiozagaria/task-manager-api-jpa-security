@@ -65,16 +65,16 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InvalidRefreshTokenException.class)
-    public ResponseEntity<APIError> handleIllegalState(
-            IllegalStateException illegalStateException,
+    public ResponseEntity<APIError> handleInvalidRefreshToken(
+            InvalidRefreshTokenException exception,
             HttpServletRequest request
     ) {
         HttpStatus status = HttpStatus.UNAUTHORIZED;
         return ResponseEntity
                 .status(status)
                 .body(new APIError(
-                        "ILLEGAL_STATE",
-                        illegalStateException.getMessage(),
+                        "INVALID_REFRESH_TOKEN",
+                        exception.getMessage(),
                         request.getRequestURI(),
                         status
                 ));
