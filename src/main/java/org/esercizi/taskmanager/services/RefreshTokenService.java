@@ -71,7 +71,7 @@ public class RefreshTokenService {
         RefreshToken refreshToken = refreshTokenRepository.findByTokenHash(hashToken)
                 .orElseThrow(() -> new InvalidRefreshTokenException("Token not found"));
         if (refreshToken.getRevokedAt() != null) {
-            throw new InvalidRefreshTokenException("Token revocaked at " + refreshToken.getRevokedAt().toString());
+            throw new InvalidRefreshTokenException("Token revoked at " + refreshToken.getRevokedAt().toString());
         }
 
         if (!refreshToken.getExpiresAt().isAfter(now)) {
