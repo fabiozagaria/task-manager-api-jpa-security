@@ -1,6 +1,7 @@
 package org.esercizi.taskmanager.services;
 
 import org.esercizi.taskmanager.dto.RefreshResponse;
+import org.esercizi.taskmanager.exceptions.InvalidRefreshTokenException;
 import org.esercizi.taskmanager.models.RefreshToken;
 import org.esercizi.taskmanager.models.User;
 import org.esercizi.taskmanager.repository.RefreshTokenRepository;
@@ -70,11 +71,11 @@ public class RefreshTokenService {
         RefreshToken refreshToken = refreshTokenRepository.findByTokenHash(hashToken)
                 .orElseThrow();
         if (refreshToken.getRevokedAt() != null) {
-            throw new IllegalStateException();
+            throw new InvalidRefreshTokenException("Token revocaked at " + refreshToken.getRevokedAt().toString());
         }
 
         if (!refreshToken.getExpiresAt().isAfter(now)) {
-            throw new IllegalStateException();
+            throw new InvalidRefreshTokenException("Token expired");
         }
 
 

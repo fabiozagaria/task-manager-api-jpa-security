@@ -1,7 +1,6 @@
 package org.esercizi.taskmanager.exceptions;
 
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.boot.webmvc.autoconfigure.WebMvcProperties;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -63,5 +62,21 @@ public class GlobalExceptionHandler {
                                 )
                 );
 
+    }
+
+    @ExceptionHandler(InvalidRefreshTokenException.class)
+    public ResponseEntity<APIError> handleIllegalState(
+            IllegalStateException illegalStateException,
+            HttpServletRequest request
+    ) {
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
+        return ResponseEntity
+                .status(status)
+                .body(new APIError(
+                        "ILLEGAL_STATE",
+                        illegalStateException.getMessage(),
+                        request.getRequestURI(),
+                        status
+                ));
     }
 }
