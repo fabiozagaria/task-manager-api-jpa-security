@@ -3,6 +3,8 @@ package org.esercizi.taskmanager.controllers;
 import jakarta.validation.Valid;
 import org.esercizi.taskmanager.dto.LoginRequest;
 import org.esercizi.taskmanager.dto.LoginResponse;
+import org.esercizi.taskmanager.dto.RefreshRequest;
+import org.esercizi.taskmanager.dto.RefreshResponse;
 import org.esercizi.taskmanager.models.User;
 import org.esercizi.taskmanager.security.JwtService;
 import org.esercizi.taskmanager.services.RefreshTokenService;
@@ -47,6 +49,14 @@ public class AuthController {
         String refreshToken = refreshTokenService.createRefreshToken(user);
         String jwtAccessToken = jwtService.generateToken(authentication);
         return new LoginResponse(jwtAccessToken, refreshToken);
+    }
+
+    @PostMapping("/refresh")
+    public RefreshResponse refresh(
+            @Valid @RequestBody RefreshRequest request
+    ) throws NoSuchAlgorithmException {
+        return refreshTokenService.refresh(request.refreshToken());
+
     }
 
 }

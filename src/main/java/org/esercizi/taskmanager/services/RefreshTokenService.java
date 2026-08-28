@@ -1,8 +1,10 @@
 package org.esercizi.taskmanager.services;
 
+import org.esercizi.taskmanager.dto.RefreshResponse;
 import org.esercizi.taskmanager.models.RefreshToken;
 import org.esercizi.taskmanager.models.User;
 import org.esercizi.taskmanager.repository.RefreshTokenRepository;
+import org.esercizi.taskmanager.security.JwtService;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
@@ -15,9 +17,12 @@ import java.util.Base64;
 @Service
 public class RefreshTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
+    private final JwtService jwtService;
 
-    public RefreshTokenService(RefreshTokenRepository refreshTokenRepository) {
+    public RefreshTokenService(RefreshTokenRepository refreshTokenRepository, UserService userService, JwtService jwtService) {
         this.refreshTokenRepository = refreshTokenRepository;
+        this.jwtService = jwtService;
+
     }
 
     public String generateRefreshToken() {
@@ -48,13 +53,48 @@ public class RefreshTokenService {
                 null,
                 user,
                 rawTokenHash,
-                now.plusSeconds(300),
+                now.plusSeconds(60000),
                 now,
                 null
         );
         refreshTokenRepository.save(refreshToken);
         return rawToken;
 
+    }
+
+    public RefreshToken getValidRefreshToken(String rawToken) throws NoSuchAlgorithmException {
+        Instant now = Instant.now();
+
+        String hashToken = hashToken(rawToken);
+
+        RefreshToken refreshToken = refreshTokenRepository.findByTokenHash(hashToken)
+                .orElseThrow();
+        if (refreshToken.getRevokedAt() != null) {
+            throw new IllegalStateException();
+        }
+
+        if (!refreshToken.getExpiresAt().isAfter(now)) {
+            throw new IllegalStateException();
+        }
+
+
+        return refreshToken;
+    }
+
+
+    public RefreshResponse refresh(String rawToken) throws NoSuchAlgorithmException {
+        RefreshToken refreshToken = getValidRefreshToken(rawToken);
+        User user = refreshToken.getUser();
+        refreshToken.setRevokedAt(Instant.now());
+        refreshTokenRepository.save(refreshToken);
+
+
+        String access = jwtService.generateToken(user.getUsername());
+        String refresh = createRefreshToken(user);
+        return new RefreshResponse(
+                access,
+                refresh
+        );
     }
 
 }
