@@ -19,7 +19,7 @@ public class RefreshTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtService jwtService;
 
-    public RefreshTokenService(RefreshTokenRepository refreshTokenRepository, UserService userService, JwtService jwtService) {
+    public RefreshTokenService(RefreshTokenRepository refreshTokenRepository, JwtService jwtService) {
         this.refreshTokenRepository = refreshTokenRepository;
         this.jwtService = jwtService;
 
