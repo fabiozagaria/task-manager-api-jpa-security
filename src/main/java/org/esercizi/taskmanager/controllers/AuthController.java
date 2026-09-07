@@ -1,10 +1,7 @@
 package org.esercizi.taskmanager.controllers;
 
 import jakarta.validation.Valid;
-import org.esercizi.taskmanager.dto.LoginRequest;
-import org.esercizi.taskmanager.dto.LoginResponse;
-import org.esercizi.taskmanager.dto.RefreshRequest;
-import org.esercizi.taskmanager.dto.RefreshResponse;
+import org.esercizi.taskmanager.dto.*;
 import org.esercizi.taskmanager.models.User;
 import org.esercizi.taskmanager.security.JwtService;
 import org.esercizi.taskmanager.services.RefreshTokenService;
@@ -57,6 +54,13 @@ public class AuthController {
     ) throws NoSuchAlgorithmException {
         return refreshTokenService.refresh(request.refreshToken());
 
+    }
+
+    @PostMapping("/logout")
+    public LogoutResponse logout(
+            @RequestBody LogoutRequest logoutRequest
+    ) throws NoSuchAlgorithmException {
+        return refreshTokenService.logout(logoutRequest);
     }
 
 }
