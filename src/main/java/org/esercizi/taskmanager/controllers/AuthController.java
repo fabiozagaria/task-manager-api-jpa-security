@@ -6,6 +6,8 @@ import org.esercizi.taskmanager.models.User;
 import org.esercizi.taskmanager.security.JwtService;
 import org.esercizi.taskmanager.services.RefreshTokenService;
 import org.esercizi.taskmanager.services.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -57,10 +59,12 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public LogoutResponse logout(
+    public ResponseEntity<LogoutResponse> logout(
             @RequestBody LogoutRequest logoutRequest
     ) throws NoSuchAlgorithmException {
-        return refreshTokenService.logout(logoutRequest);
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .body(refreshTokenService.logout(logoutRequest));
     }
 
 }
