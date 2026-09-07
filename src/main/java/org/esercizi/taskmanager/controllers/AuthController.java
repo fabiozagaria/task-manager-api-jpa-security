@@ -62,6 +62,7 @@ public class AuthController {
     public ResponseEntity<Void> logout(
             @RequestBody LogoutRequest logoutRequest
     ) throws NoSuchAlgorithmException {
+        refreshTokenService.logout(logoutRequest);
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
                 .build();
