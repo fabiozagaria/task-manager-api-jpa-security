@@ -59,12 +59,12 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<LogoutResponse> logout(
+    public ResponseEntity<Void> logout(
             @RequestBody LogoutRequest logoutRequest
     ) throws NoSuchAlgorithmException {
         return ResponseEntity
                 .status(HttpStatus.NO_CONTENT)
-                .body(refreshTokenService.logout(logoutRequest));
+                .build();
     }
 
 }
