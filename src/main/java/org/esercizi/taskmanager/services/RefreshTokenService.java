@@ -1,7 +1,6 @@
 package org.esercizi.taskmanager.services;
 
 import org.esercizi.taskmanager.dto.LogoutRequest;
-import org.esercizi.taskmanager.dto.LogoutResponse;
 import org.esercizi.taskmanager.dto.RefreshResponse;
 import org.esercizi.taskmanager.exceptions.InvalidRefreshTokenException;
 import org.esercizi.taskmanager.models.RefreshToken;
@@ -102,12 +101,10 @@ public class RefreshTokenService {
     }
 
     @Transactional
-    public LogoutResponse logout(LogoutRequest logoutRequest) throws NoSuchAlgorithmException {
+    public void logout(LogoutRequest logoutRequest) throws NoSuchAlgorithmException {
         RefreshToken refreshToken = getValidRefreshToken(logoutRequest.refreshToken());
         refreshToken.setRevokedAt(Instant.now());
-        return new LogoutResponse(
-                "Logout Effettuato!"
-        );
+
 
     }
 }
